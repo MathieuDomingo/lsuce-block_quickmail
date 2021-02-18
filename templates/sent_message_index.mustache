@@ -92,6 +92,7 @@
                     <td>{{ sentAt }}</td>
                     <td>
                         <a href="{{ openUrl }}" class="btn btn-primary btn-sm">{{# str }} view {{/ str }}</a>
+                        <a href="?action=delete&id={{ id }}" class="btn btn-danger btn-sm btn-delete-sent">{{# str }} delete {{/ str }}</a>
                     </td>
                 </tr>
             {{/ tableRows }}

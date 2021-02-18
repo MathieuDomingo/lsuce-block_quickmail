@@ -11,4 +11,12 @@ $(function() {
             window.location.href = 'sent.php?courseid=' + this.value;
         }
     });
+    
+    $(document).click(function(e) {
+        if ($(e.target).hasClass("btn-delete-sent")) {
+            if ( ! confirm('Delete this sent message?')) {
+                e.preventDefault();
+            }
+        }
+    });
 });

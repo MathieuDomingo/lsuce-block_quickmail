@@ -44,6 +44,47 @@ class sent_repo extends repo implements sent_repo_interface {
         'modified' => 'timemodified',
     ];
 
+        /**
+     * Fetches a sent message by id, or returns null
+     *
+     * @param  int  $messageid
+     * @return message|null
+     */
+    public static function find_or_null($messageid) {
+        // First, try to find the message by id, returning null by default.
+        if (!$message = message::find_or_null($messageid)) {
+            return null;
+        }
+
+        // If this message is NOT a sent, return null.
+        if (!$message->is_sent_message()) {
+            return null;
+        }
+
+        return $message;
+    }
+
+    /**
+     * Fetches a message by id which must belong to the given user id, or returns null
+     *
+     * @param  integer $messageid
+     * @param  integer $userid
+     * @return message|null
+     */
+    public static function find_for_user_or_null($messageid = 0, $userid = 0) {
+        // First, try to find the message by id, returning null by default.
+        if (!$message = self::find_or_null($messageid)) {
+            return null;
+        }
+
+        // If this message does not belong to this user, return null.
+        if (!$message->is_owned_by_user($userid)) {
+            return null;
+        }
+
+        return $message;
+    }
+    
     /**
      * Returns all sent messages belonging to the given user id
      *

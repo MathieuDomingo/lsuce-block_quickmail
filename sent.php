@@ -30,6 +30,8 @@ $pageparams = [
     'dir' => optional_param('dir', 'desc', PARAM_TEXT), // Asc|desc.
     'page' => optional_param('page', 1, PARAM_INT),
     'per_page' => 10, // Adjust as necessary, maybe turn into real param?
+    'action' => optional_param('action', '', PARAM_TEXT), // delete.
+    'message_id' => optional_param('id', 0, PARAM_INT),
 ];
 
 // Authentication.
@@ -67,4 +69,4 @@ block_quickmail\controllers\sent_message_index_controller::handle($PAGE, [
     'user' => $USER,
     'course_id' => $pageparams['courseid'],
     'page_params' => $pageparams
-]);
+], $pageparams['action']);

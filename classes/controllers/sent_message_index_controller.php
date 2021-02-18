@@ -27,7 +27,7 @@ defined('MOODLE_INTERNAL') || die();
 
 use block_quickmail\controllers\support\base_controller;
 use block_quickmail\controllers\support\controller_request;
-use block_quickmail_config;
+use block_quickmail_string;
 use block_quickmail\repos\course_repo;
 use block_quickmail\repos\sent_repo;
 use block_quickmail\persistents\message;
@@ -39,7 +39,10 @@ class sent_message_index_controller extends base_controller {
     public static $views = [
         'sent_message_index' => [],
     ];
-
+    
+    public static $actions = [
+        'delete',
+    ];
     /**
      * Returns the query string which this controller's forms will append to target URLs
      *
@@ -83,6 +86,31 @@ class sent_message_index_controller extends base_controller {
             'sort_by' => $this->props->page_params['sort'],
             'sort_dir' => $this->props->page_params['dir'],
         ]);
+    }
+    
+    public function action_delete(controller_request $request) {
+        // Validate params.
+        if ( ! $this->props->page_params['message_id']) {
+            // Unset the action param.
+            $this->props->page_params['action'] = '';
+
+            // Redirect back to index with error.
+            $request->redirect_as_error(block_quickmail_string::get('message_not_found'),
+                static::$baseuri, $this->props->page_params);
+        }
+
+        // Attempt to fetch the sent message.
+        if ( ! $message = sent_repo::find_for_user_or_null($this->props->page_params['message_id'], $this->props->user->id)) {
+            // Redirect and notify of error.
+            $request->redirect_as_error(block_quickmail_string::get('sent_no_record'),
+                static::$baseuri, $this->get_form_url_params());
+        }
+
+        // Attempt to hard delete sent.
+        $message->soft_delete();
+
+        $request->redirect_as_success(block_quickmail_string::get('message_deleted'),
+            static::$baseuri, $this->get_form_url_params());
     }
 
 }

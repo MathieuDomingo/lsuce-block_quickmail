@@ -245,6 +245,7 @@ $string['notification_is_enabled_help'] = 'If enabled, this notification will be
 // History.
 $string['no_sents'] = 'You have no sent message history.';
 $string['sent_messages'] = 'Sent Message History';
+$string['sent_no_record'] = 'Could not find that sent message.';
 
 // Drafts.
 $string['drafts'] = 'Drafts';
